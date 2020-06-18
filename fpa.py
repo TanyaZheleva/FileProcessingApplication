@@ -4,23 +4,34 @@ class File:
     lines = []
     numbers = []
 
+    def validate_file(self, fd):
+        for line in self.lines:
+            if line[0] == " " or line [0] == "\t":
+                return 0
+            for i in range(len(line)-1):
+                if line[i-1] == " " or line[i-1] == "\t":
+                    if line[i] == "0":
+                        return 0
+        return 1
+
     def get_lines(self,fd):
         self.lines=fd.readlines()
+        check=self.validate_file(fd)
+        if check == 0:
+            return 0
         num=""
         for j in self.lines:
             sublist = []
             for q in j:
-                if q == " ":
+                if q == " " or q == "\t":
                     sublist.append(int(num))
                     num=""
                 else:
                     num+=q
             self.numbers.append(sublist)
-#        print (numbers)
+#        return 1
+        print (self.numbers)
 
-#    def validate_file(self, fd):
-        
-        
 #    def switch_lines(self, fd, l1, l2):
 #    def switch_numbers(self, fd, l1, n1, l2, n2):
 #    def save_file(self, fd, filename):
@@ -41,6 +52,6 @@ fd = open(filename,'r+')
 
 myobject = File()
 myobject.get_lines(fd)
-myobject.validate_file(fd)
+print( myobject.validate_file(fd) )
 
-#fd.close()
+fd.close()
