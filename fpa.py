@@ -1,17 +1,25 @@
 #!/usr/bin/python
 
+import re
+import sys
+
 class File:
     lines = []
     numbers = []
-
+    
     def validate_file(self, fd):
+        count=1
         for line in self.lines:
-            if line[0] == " " or line [0] == "\t":
+            if re.search(r'^[ \t]',line):
+                print("Line %d starts with a space.Invalid syntax" %count)
                 return 0
-            for i in range(len(line)-1):
-                if line[i-1] == " " or line[i-1] == "\t":
-                    if line[i] == "0":
-                        return 0
+            if re.search(r'[ \t]0',line) or re.search(r'^0',line):
+                print("Number at line %d starts with 0" %count)
+                return 0
+            if re.search(r'[^[0-9]]',line,re.IGNORECASE):
+                print("Line %d contains non-digit characters" %count)
+                return 0
+            count+=1
         return 1
 
     def get_lines(self,fd):
@@ -29,8 +37,8 @@ class File:
                 else:
                     num+=q
             self.numbers.append(sublist)
-#        return 1
-        print (self.numbers)
+        return 1
+#        print (self.numbers)
 
 #    def switch_lines(self, fd, l1, l2):
 #    def switch_numbers(self, fd, l1, n1, l2, n2):
@@ -51,7 +59,10 @@ print (option)
 fd = open(filename,'r+')
 
 myobject = File()
-myobject.get_lines(fd)
-print( myobject.validate_file(fd) )
+res=myobject.get_lines(fd)
+if res == 0:
+    sys.exit()
+print( res )
+i#print( myobject.validate_file(fd) )
 
 fd.close()
