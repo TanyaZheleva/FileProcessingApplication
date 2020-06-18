@@ -41,30 +41,17 @@ class File:
             self.numbers.append(sublist)
         return 1
 
-    def switch_lines(self, l1, l2):
-        first=0
-        second=0
+    def switch_lines(self, filename, l1, l2):
         if l1 <= 0 or l2 <= 0 or l1 > len(self.lines) or l2 > len(self.lines):
-            if l1<l2:
-                first=l1
-                second=l2
-            else:
-                first=l2
-                second=l1
-        tfd, path = tempfile.mkstemp()
-        try:
-            with os.fdopen(tfd,'w') as tmp:
-                count=1
-                for line in self.lines:
-                    if count == first:
-                        tmp.write(self.lines[second] + '\n')
-                    elif count == second:
-                        tmp.write(self.lines[first] + '\n')
-                    else:
-                        tmp.write(line + '\n')
-                    count+=1
-        finally:
-            os.remove(path)
+            print("Invalid indexes, range of file line indexes is [1;%d]"%len(self.lines))
+            return 0
+        l1-=1
+        l2-=1
+        self.lines[l1],self.lines[l2] = self.lines[l2],self.lines[l1]
+        fd=open(filename,'w')
+        for line in self.lines:
+            fd.write(line)
+        fd.close()
         
 #    def switch_numbers(self, fd, l1, n1, l2, n2):
 #    def save_file(self, fd, filename):
@@ -72,7 +59,7 @@ class File:
 #    def read_number(self, fd, line, index):
 #    def replace_number(self, fd, line, index, number):
 #    def remove_number(self, fd, line, index):
-
+#    def terminate_script(result):
 
 filename = input ("Enter the full path to a file you would like to work with: ")
 
@@ -86,5 +73,7 @@ myobject = File()
 res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
-myobject.switch_lines(2,5)
+
+myobject.switch_lines(filename,5,5)
 fd.close()
+
