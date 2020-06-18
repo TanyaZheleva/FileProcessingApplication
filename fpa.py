@@ -56,7 +56,14 @@ class File:
 #    def switch_numbers(self, fd, l1, n1, l2, n2):
 #    def save_file(self, fd, filename):
 #    def insert_number(self, fd, line, index, number):
-#    def read_number(self, fd, line, index):
+    def read_number(self, line, index):
+        if line <= 0 or line > len(self.numbers):
+            print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
+            return 0
+        if index <= 0  or index > len(self.numbers[line-1]):
+            print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
+            return 0
+        print(self.numbers[line-1][index-1])
 #    def replace_number(self, fd, line, index, number):
 #    def remove_number(self, fd, line, index):
 #    def terminate_script(result):
@@ -74,6 +81,9 @@ res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
 
-myobject.switch_lines(filename,5,5)
+myobject.read_number(-1,1)
+myobject.read_number(1,0)
+myobject.read_number(6,2)
+myobject.read_number(111,-1)
 fd.close()
 
