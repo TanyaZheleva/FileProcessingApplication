@@ -143,7 +143,26 @@ class File:
         fd.close()
 
         
-#    def remove_number(self, fd, line, index):
+    def remove_number(self, filename, line, index):
+        if line <= 0 or line > len(self.numbers):
+            print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
+            return 0
+        if index <= 0  or index > len(self.numbers[line-1]):
+            print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
+            return 0
+        del self.numbers[line-1][index-1]
+        fd=open(filename,'w')
+        for line in self.numbers:
+            check = 0 
+            for num in line:
+                if check == 0:
+                    fd.write(str(num))
+                    check = 1
+                else:
+                    fd.write(" " + str(num))
+            fd.write("\n")
+        fd.close()
+
 #    def terminate_script(result):
 
 filename = input ("Enter the full path to a file you would like to work with: ")
@@ -159,6 +178,6 @@ res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
 
-myobject.insert_number(filename,7,7,6)
+myobject.remove_number(filename,1,7)
 fd.close()
 
