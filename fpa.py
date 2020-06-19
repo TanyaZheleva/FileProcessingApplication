@@ -1,9 +1,7 @@
 #!/usr/bin/python
-
 import re
 import sys
 import os.path
-import tempfile
 
 class File:
     lines = []
