@@ -83,8 +83,33 @@ class File:
             fd.write("\n")
         fd.close()
 #    def save_file(self, fd, filename):
-#    def insert_number(self, fd, line, index, number):
-   
+
+    def insert_number(self, filename, line, index, number):
+        if line <= 0 or line > len(self.numbers):
+            if line == len(self.numbers)+1:
+                self.numbers.insert(line-1,[])
+            else:
+                print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
+                return 0
+        if index <= 0  or index > len(self.numbers[line-1])+1:
+            print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
+            return 0
+        if re.search(r'^0[0-9]+$',str(number)) or re.search(r'[^[0-9]]',str(number)):
+            print("%d is not a valid number"%number)
+            return 0
+        self.numbers[line-1].insert(index-1,number)
+        fd=open(filename,'w')
+        for line in self.numbers:
+            check = 0 
+            for num in line:
+                if check == 0:
+                    fd.write(str(num))
+                    check = 1
+                else:
+                    fd.write(" " + str(num))
+            fd.write("\n")
+        fd.close()
+  
     def read_number(self, line, index):
         if line <= 0 or line > len(self.numbers):
             print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
@@ -134,6 +159,6 @@ res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
 
-myobject.switch_numbers(filename,1,7,6,1)
+myobject.insert_number(filename,7,7,6)
 fd.close()
 
