@@ -56,6 +56,7 @@ class File:
 #    def switch_numbers(self, fd, l1, n1, l2, n2):
 #    def save_file(self, fd, filename):
 #    def insert_number(self, fd, line, index, number):
+   
     def read_number(self, line, index):
         if line <= 0 or line > len(self.numbers):
             print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
@@ -64,13 +65,34 @@ class File:
             print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
             return 0
         print(self.numbers[line-1][index-1])
-#    def replace_number(self, fd, line, index, number):
+   
+    def modify_number(self, filename, line, index, number):
+        if line <= 0 or line > len(self.numbers):
+            print("Line index is invalid. Range:[1;%d]"%len(self.numbers))
+            return 0
+        if index <= 0  or index > len(self.numbers[line-1]):
+            print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
+            return 0
+        self.numbers[line-1][index-1] = number
+        fd=open(filename,'w')
+        for line in self.numbers:
+            check = 0 
+            for num in line:
+                if check == 0:
+                    fd.write(str(num))
+                    check = 1
+                else:
+                    fd.write(" " + str(num))
+            fd.write("\n")
+        fd.close()
+
+        
 #    def remove_number(self, fd, line, index):
 #    def terminate_script(result):
 
 filename = input ("Enter the full path to a file you would like to work with: ")
 
-print ("a. validate the file contents\nb.switch two lines by line indexes\nc.switch two numbers by line and number indexes\nd.the result file be saved in the original after validations on the format and the given indexes\ne.1.insert at position\ne.2.read a number at a position\ne.3.modify a number at posigion\ne.4.remove a number at position")
+print ("a. validate the file contents\nb.switch two lines by line indexes\nc.switch two numbers by line and number indexes\nd.1.insert at position\nd.2.read a number at a position\nd.3.modify a number at posigion\nd.4.remove a number at position")
 
 option = input ("Select an option and input arguments: ")
 
@@ -81,9 +103,6 @@ res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
 
-myobject.read_number(-1,1)
-myobject.read_number(1,0)
-myobject.read_number(6,2)
-myobject.read_number(111,-1)
+myobject.modify_number(filename,1,8,111111)
 fd.close()
 
