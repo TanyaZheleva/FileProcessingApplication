@@ -15,7 +15,7 @@ class File:
             if re.search(r'^[ \t]',line):
                 print("Line %d starts with a space.Invalid syntax" %count)
                 return 0
-            if re.search(r'[ \t]0',line) or re.search(r'^0',line):
+            if re.search(r'[ \t]0[0-9]+',line) or re.search(r'^0[0-9]+',line):
                 print("Number at line %d starts with 0" %count)
                 return 0
             if re.search(r'[^[0-9]]',line,re.IGNORECASE):
@@ -53,7 +53,35 @@ class File:
             fd.write(line)
         fd.close()
         
-#    def switch_numbers(self, fd, l1, n1, l2, n2):
+    def switch_numbers(self, filename, l1, n1, l2, n2):
+        if l1 <= 0 or l1 > len(self.numbers):
+            print("Line index %d is invalid. Range:[1;%d]"%(l1,len(self.numbers)))
+            return 0
+        if l2 <= 0 or l2 > len(self.numbers):
+            print("Line index %d is invalid. Range:[1;%d]"%(l2,len(self.numbers)))
+            return 0
+        if n1 <= 0  or n1 > len(self.numbers[l1-1]):
+            print("Inline index %d is invalid. Range:[1;%d]"%(n1,len(self.numbers[l1-1])))
+            return 0
+        if n2 <= 0  or n2 > len(self.numbers[l2-1]):
+            print("Inline index %d is invalid. Range:[1;%d]"%(n2,len(self.numbers[l2-1])))
+            return 0
+        l1-=1
+        l2-=1
+        n1-=1
+        n2-=1
+        self.numbers[l1][n1], self.numbers[l2][n2] = self.numbers[l2][n2], self.numbers[l1][n1]
+        fd=open(filename,'w')
+        for line in self.numbers:
+            check = 0 
+            for num in line:
+                if check == 0:
+                    fd.write(str(num))
+                    check = 1
+                else:
+                    fd.write(" " + str(num))
+            fd.write("\n")
+        fd.close()
 #    def save_file(self, fd, filename):
 #    def insert_number(self, fd, line, index, number):
    
@@ -72,6 +100,9 @@ class File:
             return 0
         if index <= 0  or index > len(self.numbers[line-1]):
             print("Inline index is invalid. Range:[1;%d]"%len(self.numbers[line-1]))
+            return 0
+        if re.search(r'^0[0-9]+$',str(number)) or re.search(r'[^[0-9]]',str(number)):
+            print("%d is not a valid number"%number)
             return 0
         self.numbers[line-1][index-1] = number
         fd=open(filename,'w')
@@ -103,6 +134,6 @@ res=myobject.get_lines(fd)
 if res == 0:
     sys.exit()
 
-myobject.modify_number(filename,1,8,111111)
+myobject.switch_numbers(filename,1,7,6,1)
 fd.close()
 
