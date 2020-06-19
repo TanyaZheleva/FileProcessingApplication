@@ -2,6 +2,8 @@
 import re
 import sys
 import os.path
+import mysql.connector
+#import subprocess
 
 class File:
     lines = []
@@ -143,10 +145,42 @@ class File:
         del self.numbers[line-1][index-1]
         self.save_file(filename)
 
+    def create_db(sef):
+       mydb = mysql.connector.connect(
+            host="localhost",
+            user="myuser",
+            password="mypassword"
+        )
+       
+       mycursor = mydb.cursor()
+       mycursor.execute("CREATE DATABASE myfiledb")
+
+    def insert_table(self):
+#        subprocess.call("./createdb.sh")
+#        self.create_db()
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="myuser",
+            password="mypassword",
+            database="myfiledb"
+        )
+        
+        mycursor = mydb.cursor()
+        mycursor.execute("CREATE TABLE IF NOT EXISTS fileContents (id INT NOT NULL PRIMARY KEY, line_index INT NOT NULL, data TEXT)")
+        index=1
+        _id=1000
+        for line in self.lines:
+            sql = "INSERT INTO fileContents (id, line_index, data) values(%s, %s, %s);"
+            val = (int(_id), int(index), line)
+            mycursor.execute(sql, val)
+            index+=1
+            _id+=1
+            mydb.commit()
+
 def print_options():
     print("\n")
     print("Enter only letter(and .<number>) of desired option")
-    print ("a. validate the file contents\nb.switch two lines by line indexes\nc.switch two numbers by line and number indexes\nd.1.insert at position\nd.2.read a number at a position\nd.3.modify a number at posigion\nd.4.remove a number at position\nq.exit program" )
+    print ("a. validate the file contents\nb.switch two lines by line indexes\nc.switch two numbers by line and number indexes\nd.1.insert at position\nd.2.read a number at a position\nd.3.modify a number at posigion\nd.4.remove a number at position\ne.insert content of file into a database table\nq.exit program" )
 
 
 
@@ -186,6 +220,8 @@ while option != "q":
     elif option == "d.4":
         line, num = map(int, input ("specity line index, inline index: ").split())
         myobject.remove_number(filename,line, num)
+    elif option == "e":
+        myobject.insert_table()
     else:
         print("Invalid option.")
     print_options()
