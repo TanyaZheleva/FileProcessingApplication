@@ -145,15 +145,15 @@ class File:
         del self.numbers[line-1][index-1]
         self.save_file(filename)
 
-    def create_db(sef):
-       mydb = mysql.connector.connect(
-            host="localhost",
-            user="myuser",
-            password="mypassword"
-        )
-       
-       mycursor = mydb.cursor()
-       mycursor.execute("CREATE DATABASE myfiledb")
+#    def create_db(sef):
+#       mydb = mysql.connector.connect(
+#            host="localhost",
+#            user="myuser",
+#            password="mypassword"
+#        )
+#       
+#       mycursor = mydb.cursor()
+#       mycursor.execute("CREATE DATABASE myfiledb")
 
     def insert_table(self):
 #        subprocess.call("./createdb.sh")
